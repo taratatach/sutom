@@ -56,21 +56,7 @@ fs.readFile("data/mots.txt", "UTF8", function (erreur, contenu) {
         .replace(/œ/gu, "oe")
         .replace(/\p{Diacritic}/gu, "")
     )
-    .filter(
-      (mot) =>
-        !(mot[0] === mot[0].toUpperCase()) &&
-        mot.length >= 6 &&
-        mot.length <= 9 &&
-        !mot.includes("!") &&
-        !mot.includes(" ") &&
-        !mot.includes("-") &&
-        !mot.toUpperCase().startsWith("K") &&
-        !mot.toUpperCase().startsWith("Q") &&
-        !mot.toUpperCase().startsWith("W") &&
-        !mot.toUpperCase().startsWith("X") &&
-        !mot.toUpperCase().startsWith("Y") &&
-        !mot.toUpperCase().startsWith("Z")
-    )
+    .filter((mot) => mot.length >= 4)
     .filter(function (elem, index, self) {
       return index === self.indexOf(elem);
     });
@@ -87,8 +73,8 @@ fs.readFile("data/mots.txt", "UTF8", function (erreur, contenu) {
   ecrireListeNettoyee(dictionnaire);
   ecrireDictionnaire(dictionnaire);
 
-  let longueurs = [6, 7, 8, 9];
-  let initialesPossibles = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "L", "M", "N", "O", "P", "R", "S", "T", "U", "V"];
+  let longueurs = [4, 5, 6, 7, 8, 9, 10, 11, 12];
+  let initialesPossibles = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
   for (let longueur of longueurs) {
     for (let initiale of initialesPossibles) {
       let dicoFiltre = dictionnaire.filter((mot) => mot.length === longueur && mot.toUpperCase().startsWith(initiale));

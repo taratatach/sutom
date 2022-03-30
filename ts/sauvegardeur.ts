@@ -20,39 +20,17 @@ export default class Sauvegardeur {
     return stats;
   }
 
-  public static sauvegarderPartieEnCours(idPartie: string, datePartie: Date, propositions: Array<string>, dateFinPartie?: Date): void {
-    let partieEnCours: SauvegardePartie = {
-      propositions: propositions,
-      datePartie,
-      dateFinPartie,
-      idPartie,
-    };
-    localStorage.setItem(this._clePartieEnCours, JSON.stringify(partieEnCours));
+  public static sauvegarderPartieEnCours(partieEnCours: PartieEnCours): void {
+    const sauvegarde: SauvegardePartie = partieEnCours.genererSauvegarde()
+    localStorage.setItem(this._clePartieEnCours, JSON.stringify(sauvegarde));
   }
 
-  public static chargerSauvegardePartieEnCours(): PartieEnCours | undefined {
+  public static chargerSauvegardePartieEnCours(): PartieEnCours | null {
     let dataPartieEnCours = localStorage.getItem(this._clePartieEnCours);
-    if (!dataPartieEnCours) return;
+    if (!dataPartieEnCours) return null;
 
-    let partieEnCours = JSON.parse(dataPartieEnCours) as SauvegardePartie;
-    let aujourdhui = new Date();
-    let datePartieEnCours = new Date(partieEnCours.datePartie);
-    if (
-      aujourdhui.getDate() !== datePartieEnCours.getDate() ||
-      aujourdhui.getMonth() !== datePartieEnCours.getMonth() ||
-      aujourdhui.getFullYear() !== datePartieEnCours.getFullYear()
-    ) {
-      localStorage.removeItem(this._clePartieEnCours);
-      return;
-    }
-    let dateFinPartie = partieEnCours.dateFinPartie === undefined ? undefined : new Date(partieEnCours.dateFinPartie);
-
-    return {
-      datePartie: datePartieEnCours,
-      dateFinPartie: dateFinPartie,
-      propositions: partieEnCours.propositions,
-      idPartie: partieEnCours.idPartie,
-    };
+    const sauvegarde = JSON.parse(dataPartieEnCours) as SauvegardePartie;
+    return PartieEnCours.restaurerSauvegarde(sauvegarde);
   }
 
   public static sauvegarderConfig(config: Configuration): void {
